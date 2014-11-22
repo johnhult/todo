@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#292A2C"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.todo.MainActivity" >
+
+	<EditText
+	    android:id="@+id/addTodoInfo"
+	    android:layout_width="match_parent"
+	    android:layout_height="627dp"
+	    android:layout_above="@+id/addTodoButton"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/addTodoTitle"
+	    android:layout_weight="1.29"
+	    android:ems="10"
+	    android:gravity="center_vertical|top"
+	    android:hint="Click to add further info."
+	    android:inputType="textMultiLine"
+	    android:maxLength="128"
+	    android:textColor="#FFFFFF"
+	    android:textColorHint="#FFFFFF"
+	    android:textSize="@dimen/abc_text_size_body_1_material"/>
+	    
+	<EditText
+	    android:id="@+id/addTodoTitle"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentTop="true"
+	    android:contentDescription="Title"
+	    android:textColor="#FFFFFF"
+	    android:textColorHint="#FFFFFF"
+	    android:ems="10"
+	    android:hint="Title"
+	    android:inputType="text"
+	    android:lines="1"
+	    android:maxLines="1"
+	    android:textSize="@dimen/abc_action_button_min_width_overflow_material" />
+		
+	
+	
+	
+	<Button
+	    android:id="@+id/addTodoButton"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/addTodoInfo"
+	    android:layout_alignParentBottom="true"
+	    android:onClick="addTodoEvent"
+	    android:text="Add" />
+
+</RelativeLayout>
