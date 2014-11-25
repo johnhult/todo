@@ -22,17 +22,16 @@
         android:background="#00FFFFFF"
         android:onClick="changeViewToNewTodo"
         android:src="@drawable/ic_launcher" />
-	<ScrollView
+
+	<ListView
+	    android:id="@+id/gradientBackground"
 	    android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-	    <LinearLayout
-	        android:id="@+id/gradientBackground"
-	        android:background="@drawable/gradient"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical" >
-	    </LinearLayout>
-	</ScrollView>
-	    
+	    android:layout_height="match_parent"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentTop="true"
+	    android:background="@drawable/gradient" >
+
+	</ListView>
+
 
 </RelativeLayout>

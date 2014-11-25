@@ -38,6 +38,8 @@ public class OnSwipeTouchListener implements OnTouchListener {
 
         @Override
         public boolean onDown(MotionEvent e) {
+        	//always return true since all gestures always begin with onDown and <br>
+            //if this returns false, the framework won't try to pick up onFling for example.
             return true;
         }
 
@@ -49,6 +51,7 @@ public class OnSwipeTouchListener implements OnTouchListener {
                 if (distanceX > 0)
                     onSwipeRight();
                 else
+                	System.out.println("" + e1.getSource());
                     onSwipeLeft();
                 return true;
             }

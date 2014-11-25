@@ -1,5 +1,6 @@
 package com.example.todo;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,18 +14,25 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends SwipeListViewActivity {
 	
 	private TodoDbHelper db;
 	private List<TodoMessage> todos;
+	private List<View> todoViews;
+	private ListView mListView;
+	private TodoAdapter<String> mAdapter;
+	
 	public int nrOfTodos;
 	public static int listItemSize;
 	public static int SCREEN_WIDTH;
@@ -38,6 +46,11 @@ public class MainActivity extends Activity {
         db = new TodoDbHelper(this);
         todos = db.getAllTodos();
         nrOfTodos = todos.size();
+        
+        //For ListView
+        mListView = (ListView) findViewById(R.id.gradientBackground);
+		mAdapter = new TodoAdapter<String>(this, R.layout.text_view_item_default);
+		mListView.setAdapter(mAdapter);
 
         //Calculate height of screen
         Display display = getWindowManager().getDefaultDisplay();
@@ -46,7 +59,7 @@ public class MainActivity extends Activity {
         int width = size.x;
         int height = size.y;
         listItemSize = height/10;
-        SCREEN_WIDTH = width;
+        SCREEN_WIDTH = width;        
         
         createTodoItems();
         
@@ -88,43 +101,16 @@ public class MainActivity extends Activity {
     
     public void createTodoItems() {
     	refreshDatabase();
-    	LinearLayout ll = (LinearLayout) findViewById(R.id.gradientBackground);
-    	//ll.layout(0, 0, SCREEN_WIDTH, listItemSize*nrOfTodos);
+    	
     	for(int i = 0; i < nrOfTodos; i++) {
-    		TextView v = new TextView(this);
     		String title = todos.get(i).getTitle();
-    		System.out.println(title);
-    		v.setText(title);
-    		v.setHeight(listItemSize);
-    		v.setAllCaps(true);
-    		v.setTextColor(Color.parseColor("#FFD9A7"));
-    		v.setTextSize(listItemSize/6);
-    		v.setHorizontallyScrolling(false);
-    		v.setMaxLines(1);
-    		v.setEllipsize(TruncateAt.END);
-    		v.setPadding(30, 50, 0, 0);
-    		v.setId(i);
-    		v.setOnTouchListener(new OnSwipeTouchListener(this) {
-    		    @Override
-    		    public void onSwipeLeft() {
-    		    	
-    		    	/*
-    		    	 * 
-    		    	 * 
-    		    	 * TODO!!! NEXT PART OF MY PLAN TO WORLD DOMINATION!
-    		    	 * 
-    		    	 * 
-    		    	 */
-    		    	//todos.get();
-    		    }
-    		});
-    		if(i%2 == 1) {
-    			v.setBackgroundColor(Color.parseColor("#11FFFFFF"));
-    		}
-    		ll.addView(v, i);    		
-    		//v.layout(0, i*listItemSize, SCREEN_WIDTH, ((i*listItemSize) + listItemSize));
+    		
+    		mAdapter.add(title);
+    		//System.out.println(title);
+    		//System.out.println(mAdapter);
     		
     	}
+    	mListView.setAdapter(mAdapter);    		
     	ImageButton b = (ImageButton) findViewById(R.id.addButton);
     	b.bringToFront();
     }
@@ -141,10 +127,29 @@ public class MainActivity extends Activity {
     	if(R.layout.activity_add_todo == currentLayout) {
     		setContentView(R.layout.activity_main);
     		currentLayout = R.layout.activity_main;
+    		
     		createTodoItems();
     	}
     	
     }
+    
+    @Override
+	public ListView getListView() {
+		return mListView;
+	}
+
+	@Override
+	public void getSwipeItem(boolean isRight, int position) {
+		Toast.makeText(this,
+				"Swipe to " + (isRight ? "right" : "left") + " direction",
+				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onItemClickListener(ListAdapter adapter, int position) {
+		Toast.makeText(this, "Single tap on item position " + position + mAdapter.getItem(position),
+				Toast.LENGTH_SHORT).show();
+	}
     
     
 }
