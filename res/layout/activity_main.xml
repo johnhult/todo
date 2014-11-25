@@ -11,28 +11,28 @@
     tools:context="com.example.todo.MainActivity" >
     <requestFocus />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:padding="0dp"
-        android:paddingTop="0dp" >
-
-    </LinearLayout>
-
     <ImageButton
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
         android:background="#00FFFFFF"
         android:onClick="changeViewToNewTodo"
         android:src="@drawable/ic_launcher" />
+	<ScrollView
+	    android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+	    <LinearLayout
+	        android:id="@+id/gradientBackground"
+	        android:background="@drawable/gradient"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+	    </LinearLayout>
+	</ScrollView>
+	    
 
 </RelativeLayout>
