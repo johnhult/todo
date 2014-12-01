@@ -34,7 +34,7 @@ public class TodoDbHelper extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY, "
                 + KEY_TITLE + " TEXT, "
                 + KEY_INFO + " TEXT, "
-                + KEY_PRIO + " INTEGER AUTOINCREMENT)";
+                + KEY_PRIO + " INTEGER)";
         //Run string :D
 		db.execSQL(sql);
 	}
@@ -45,6 +45,11 @@ public class TodoDbHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TODOS);
 		//Create tables again.
 		onCreate(db);
+	}
+	
+	public void delete(TodoMessage todo) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_TODOS, KEY_ID + " = " + todo.getId(), null);
 	}
 	
 	public void addTodo(TodoMessage todo) {

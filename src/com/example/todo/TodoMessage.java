@@ -46,4 +46,8 @@ public class TodoMessage {
 		prio = i;
 	}
 	
+	@Override
+	public String toString() {
+		return "ID: " + getId() + "\nTITLE: " + getTitle() + "\nINFO: " + getInfo() + "\nPRIO: " + getPrio();
+	}
 }
