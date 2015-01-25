@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/android:Theme.Holo" >
         <activity
-            android:name="com.example.todo.MainActivity"
+            android:name="com.sunrise.todo.MainActivity"
             android:label="@string/app_name" 
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
