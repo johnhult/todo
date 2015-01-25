@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.todo"
+    package="com.sunrise.todo"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -10,11 +10,11 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/sunrise_todo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/android:Theme.Holo" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.todo.MainActivity"
             android:label="@string/app_name" 
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

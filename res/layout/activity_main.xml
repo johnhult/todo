@@ -25,7 +25,7 @@
 	        android:layout_marginBottom="20dp"
 	        android:background="#00FFFFFF"
 	        android:onClick="changeViewToNewTodo"
-	        android:src="@drawable/ic_launcher" />
+	        android:src="@drawable/todo_add_logo" />
 	
 		<ListView
 		    android:id="@+id/gradientBackground"
@@ -33,7 +33,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentLeft="true"
 		    android:layout_alignParentTop="true"
-		    android:background="@drawable/gradient" >
+		    android:listSelector="@android:color/transparent" >
 		</ListView>
 		
 	</RelativeLayout>

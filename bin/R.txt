@@ -335,6 +335,8 @@ int drawable abc_textfield_search_default_mtrl_alpha 0x7f020031
 int drawable abc_textfield_search_material 0x7f020032
 int drawable gradient 0x7f020033
 int drawable ic_launcher 0x7f020034
+int drawable sunrise_todo 0x7f020035
+int drawable todo_add_logo 0x7f020036
 int id action_bar 0x7f090031
 int id action_bar_activity_content 0x7f090003
 int id action_bar_container 0x7f090030
@@ -454,7 +456,7 @@ int string abc_shareactionprovider_share_with_application 0x7f0a000e
 int string abc_toolbar_collapse_description 0x7f0a0004
 int string action_settings 0x7f0a0012
 int string app_name 0x7f0a0010
-int string hello_world 0x7f0a0011
+int string new_prio 0x7f0a0011
 int style AppBaseTheme 0x7f0b00eb
 int style AppTheme 0x7f0b00ec
 int style Base_TextAppearance_AppCompat 0x7f0b0098

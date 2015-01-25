@@ -10,9 +10,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,11 +20,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.sunrise.todo.R;
+
 
 public class MainActivity extends SwipeListViewActivity {
 	
 	private TodoDbHelper db;
 	private List<TodoMessage> todos;
+	private TodoMessage tmpTodo;
 	private ListView mListView;
 	private TodoAdapter<String> mAdapter;
 	private Toast toast;
@@ -36,6 +39,7 @@ public class MainActivity extends SwipeListViewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
         //DB and lists
@@ -69,6 +73,15 @@ public class MainActivity extends SwipeListViewActivity {
     	transaction.commit();
     }
     
+    public void changeViewToEditTodo(TodoMessage todo) {
+    	Fragment fragment = new TodoFragment(todo);
+    	FragmentManager fm = getFragmentManager();
+    	FragmentTransaction transaction = fm.beginTransaction();
+    	transaction.addToBackStack("newTodoView");
+    	transaction.replace(android.R.id.content, fragment, "newTodoView");
+    	transaction.commit();
+    }
+    
     public void addTodoEvent(View view) {
     	EditText titleText = (EditText) findViewById(R.id.addTodoTitle);
     	EditText infoText = (EditText) findViewById(R.id.addTodoInfo);
@@ -78,11 +91,19 @@ public class MainActivity extends SwipeListViewActivity {
     	if(!"".equals(title)) {
     		TodoMessage todo;
     		if("".equals(info)) {
-    			todo = new TodoMessage(title, "No info.", nrOfTodos+1);
+    			todo = new TodoMessage(title, "No info.", 1);
     		} else {    			
-    			todo = new TodoMessage(title, info, nrOfTodos+1);
+    			todo = new TodoMessage(title, info, 1);
     		}
-    		db.addTodo(todo);		
+    		if(tmpTodo != null) {
+    			todo.setPrio(tmpTodo.getPrio());
+    			db.delete(tmpTodo);
+    			tmpTodo = null;
+    		}
+    		todos.add(todo.getPrio()-1, todo);
+    		db.updateDbPrioAfterList(todos);
+    		db.addTodo(todo);
+    		updatePrio();
     	}	
 	
     	FragmentManager fm = getFragmentManager();
@@ -97,28 +118,34 @@ public class MainActivity extends SwipeListViewActivity {
     }
     
     public void createTodoItems() {
-    	refresh();
+    	updatePrio();
     	mAdapter.clear();
     	for(int i = 0; i < nrOfTodos; i++) {
     		String title = todos.get(i).getTitle();	
     		mAdapter.add(title);   		
+    		mAdapter.getItem(i);
     	}
-    	
+    	mListView.setDivider(null);
     	mListView.setAdapter(mAdapter);
     	
     	ImageButton b = (ImageButton) findViewById(R.id.addButton);
     	b.bringToFront();
     }
     
-    public void refresh() {
+    public void updatePrio() {
     	todos = db.getAllTodos();
     	nrOfTodos = todos.size();
+    	for (int i = 0; i < nrOfTodos; i++) {
+    		todos.get(i).setPrio(i+1);
+    		db.updateTodo(todos.get(i));
+    	}
     }
     
     @Override
     public void onBackPressed() {
     	FragmentManager fm = getFragmentManager();
     	if(fm.findFragmentByTag("newTodoView") != null) {
+    		tmpTodo = null;
     		FragmentTransaction transaction = fm.beginTransaction();
         	fm.popBackStack();
         	transaction.commit();
@@ -135,12 +162,20 @@ public class MainActivity extends SwipeListViewActivity {
 	public void getSwipeItem(boolean isRight, final int position) {
 		if (!isRight) {
 			AlertDialog ad = new AlertDialog.Builder(this)
-		    .setTitle("Delete todo!")
-		    .setMessage("Are you sure you want to delete this todo?")
+		    .setTitle("Edit or delete todo?")
+		    .setMessage("What do you want to do?")
 		    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 		    	public void onClick(DialogInterface dialog, int which) {
 		    		db.delete(todos.get(position));
+		    		todos.remove(todos.get(position));
 		    		createTodoItems();
+		            dialog.cancel();
+		        }
+		     })
+		     .setNeutralButton("Edit", new DialogInterface.OnClickListener() {
+		    	public void onClick(DialogInterface dialog, int which) {
+		    		tmpTodo = todos.get(position);
+		    		changeViewToEditTodo(todos.get(position));
 		            dialog.cancel();
 		        }
 		     })
@@ -157,11 +192,38 @@ public class MainActivity extends SwipeListViewActivity {
 	@Override
 	public void onItemClickListener(ListAdapter adapter, int position) {
 		if (toast != null) {
-			toast.cancel();			
+			toast.cancel();
 		}
-		toast = Toast.makeText(this, todos.get(position).getInfo(),Toast.LENGTH_SHORT);
+		toast = Toast.makeText(this, todos.get(position).getInfo(), Toast.LENGTH_LONG);
 		toast.show();
-		Log.d("ACTIVITY", "" + todos.get(position).toString());
+	}
+	
+	@Override
+	public void onLongClick(ListAdapter adapter, final int position) {		
+		CharSequence[] prioList = new CharSequence[nrOfTodos];
+		for (int i = 0; i < nrOfTodos; i++) {
+			int a = i+1;
+			prioList[i] = "" + a;
+		}
+		
+		AlertDialog ad = new AlertDialog.Builder(this)
+	    .setTitle("Set new priority.")
+	    .setSingleChoiceItems(prioList, position, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				todos.add(which, todos.remove(position));
+				db.updateDbPrioAfterList(todos);
+				createTodoItems();
+				dialog.cancel();
+			}
+	    })
+	    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	    	public void onClick(DialogInterface dialog, int which) { 
+	            dialog.cancel();
+	        }
+	     })
+	    .setIcon(android.R.drawable.ic_dialog_alert)
+	    .show();
 	}
     
     

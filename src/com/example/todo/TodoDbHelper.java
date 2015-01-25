@@ -1,6 +1,7 @@
 package com.example.todo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -78,6 +79,19 @@ public class TodoDbHelper extends SQLiteOpenHelper {
 		
 	}
 	
+	public void updateDbPrioAfterList(List<TodoMessage> l) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		
+		for(int i = 0; i < l.size(); i++) {
+			l.get(i).setPrio(i+1);
+			values.put(KEY_TITLE, l.get(i).getTitle());
+			values.put(KEY_INFO, l.get(i).getInfo());
+			values.put(KEY_PRIO, l.get(i).getPrio());			
+			db.update(TABLE_TODOS, values, KEY_ID + " = ?", new String[]{String.valueOf(l.get(i).getId())});
+		}
+	}
+	
 	public List<TodoMessage> getAllTodos() {
 		List<TodoMessage> list = new ArrayList<TodoMessage>();
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -94,7 +108,8 @@ public class TodoDbHelper extends SQLiteOpenHelper {
 				list.add(todo);
 			} while (cursor.moveToNext());
 		}
-		
+		TodoPrioComparator tpc = new TodoPrioComparator();
+		Collections.sort(list, tpc);
 		return list;
 	}
 

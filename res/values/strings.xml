@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">ToDo</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="new_prio">Set new prio:</string>
     <string name="action_settings">Settings</string>
 
 </resources>

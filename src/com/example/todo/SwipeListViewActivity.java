@@ -41,6 +41,13 @@ public abstract class SwipeListViewActivity extends Activity {
 	 * @param position
 	 */
 	public abstract void onItemClickListener(ListAdapter adapter, int position);
+	
+	/**
+	 * For long click
+	 * 
+	 * @param view
+	 */
+	public abstract void onLongClick(ListAdapter adapter, int position);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +86,12 @@ public abstract class SwipeListViewActivity extends Activity {
 		onItemClickListener(list.getAdapter(), position);
 
 	}
+	
+	private void myOnLongClick(int position) {
+		if (position < 0)
+			return;
+		onLongClick(list.getAdapter(), position);
+	}
 
 	class MyGestureDetector extends SimpleOnGestureListener {
 
@@ -92,6 +105,12 @@ public abstract class SwipeListViewActivity extends Activity {
 			myOnItemClick(pos);
 			return true;
 		}
+		
+		@Override
+		public void onLongPress(MotionEvent e) {
+			int pos = list.pointToPosition((int) e.getX(), (int) e.getY());
+			myOnLongClick(pos);
+		};
 
 		@Override
 		public boolean onDown(MotionEvent e) {
